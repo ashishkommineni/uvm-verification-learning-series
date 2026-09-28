@@ -17,4 +17,13 @@
 | Coverage/SVA | [Chapter 12](../lessons/12_coverage_sva/README.md) | [Coverage](../tb/uvm/mini_bus_coverage.svh), [SVA](../tb/assertions/mini_bus_sva.sv) |
 | RAL | [Chapter 13](../lessons/13_ral/README.md) | [RAL example](../examples/ral/mini_reg_model.sv) |
 | Reporting/callbacks/debug | [Chapter 14](../lessons/14_reporting_callbacks_debug/README.md) | [Callback example](../examples/callbacks/driver_callback_example.sv) |
-| Interview Q&A | [Chapter 15](../lessons/15_interview_practice/README.md) | [60-question bank](../lessons/15_interview_practice/questions_and_answers.md) |
+| Interview Q&A | [Chapter 15](../lessons/15_interview_practice/README.md) | [80-question bank](../lessons/15_interview_practice/questions_and_answers.md) |
+| Test/env/config ownership | [Chapter 16](../lessons/16_test_env_configuration/README.md) | [Typed config example](../examples/configuration/agent_config_example.sv) |
+| TLM interfaces/FIFOs | [Chapter 17](../lessons/17_tlm_interfaces_fifos/README.md) | [TLM FIFO example](../examples/tlm/tlm_fifo_example.sv) |
+| Advanced sequence control | [Chapter 18](../lessons/18_advanced_sequences/README.md) | [Response example](../examples/sequence_control/response_example.sv) |
+| Advanced phasing | [Chapter 19](../lessons/19_advanced_phasing/README.md) | [Tests and objections](../tb/uvm/mini_bus_tests.svh) |
+| Services/object utilities | [Chapter 20](../lessons/20_services_utilities/README.md) | [Synchronization example](../examples/services/sync_services_example.sv) |
+| Reset/error/regression closure | [Chapter 21](../lessons/21_reset_error_regression/README.md) | [Verification report](verification_report.md) |
+
+For a checklist-style audit across all chapters, see the
+[topic coverage matrix](topic_coverage_matrix.md).

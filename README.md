@@ -6,13 +6,16 @@ This repository is a topic-by-topic UVM learning path built around one small,
 complete verification environment. The notes explain how data and control move
 through a testbench and why each layer exists; they do not stop at macro syntax.
 
-Every chapter answers five practical questions:
+Every chapter answers practical engineering questions:
 
 1. What is this UVM construct?
 2. Why is it needed?
 3. How do ownership, control, and data move internally?
 4. Where is it used in the executable project?
 5. How can I explain it naturally in an interview?
+6. What exact syntax and ordering matter?
+7. Which edge cases create false passes, hangs, or races?
+8. Which follow-up questions should I be ready to answer?
 
 > Scope: this covers the UVM concepts needed to build, configure, run, debug,
 > and scale an environment. It complements, rather than replaces, IEEE 1800.2.
@@ -36,7 +39,16 @@ Every chapter answers five practical questions:
 | 12 | Functional coverage and SVA | Subscriber and protocol properties |
 | 13 | Register abstraction layer | Register/block/map/adapter example |
 | 14 | Reporting, callbacks, debug, timeout | Debug playbook and callback code |
-| 15 | Interview preparation | 60 practical Q&A |
+| 15 | Interview preparation | 80 practical Q&A |
+| 16 | Test, environment, and typed configuration | Ownership and construction flow |
+| 17 | TLM interfaces and FIFOs | Put/get/peek/transport, analysis, FIFO |
+| 18 | Advanced sequences | Arbitration, lock/grab, responses, IDs |
+| 19 | Advanced phasing | Runtime subphases, domains, drain, jumps |
+| 20 | UVM services and object utilities | Reports, CLI, events, barriers, recording |
+| 21 | Reset, negative tests, and regression closure | Recovery, reproducibility, signoff |
+
+Use the [topic coverage matrix](docs/topic_coverage_matrix.md) to map each UVM
+concept to its detailed lesson and code evidence.
 
 ## Executable project
 
@@ -67,7 +79,8 @@ actually accepted and completed at the pins, never only from generator intent.
 - Self-checking reference model with exact transaction counts.
 - Concurrent assertions and assertion cover properties.
 - Factory override and `config_db` examples in the executable path.
-- Focused virtual-sequence, callback, and RAL reference code.
+- Focused configuration, TLM, response-routing, virtual-sequence, callback,
+  synchronization-service, and RAL reference code.
 - Xcelium regression target and portable RTL/SVA smoke test.
 - Optional full-UVM path for a recent Verilator plus Accellera UVM.
 - Verification plan, expected output, simulator boundary, and result record.
@@ -76,7 +89,7 @@ actually accepted and completed at the pins, never only from generator intent.
 
 ```text
 uvm-verification-learning-series/
-├── lessons/                 sixteen concept and interview guides
+├── lessons/                 twenty-two concept and interview guides
 ├── rtl/                     synthesizable mini-bus memory
 ├── tb/
 │   ├── assertions/          protocol SVA
@@ -85,7 +98,7 @@ uvm-verification-learning-series/
 │   ├── smoke/               portable self-check
 │   ├── top/                 DUT, config_db, and run_test()
 │   └── uvm/                 item through test, one concern per file
-├── examples/                virtual-sequence, callback, and RAL references
+├── examples/                focused advanced UVM references
 ├── docs/                    plan, results, topic index, run guides
 ├── scripts/                 reproducible checks
 └── sim/                     deterministic file lists
@@ -120,7 +133,8 @@ make uvm-lint
 make uvm-portable TEST=mini_bus_test SEED=13 JOBS=2
 ```
 
-`uvm-lint` also checks the focused callback, virtual-sequence, and RAL examples.
+`uvm-lint` also checks the focused configuration, TLM, response, service,
+callback, virtual-sequence, and RAL examples.
 Covergroups are disabled on the portable path; Xcelium is the coverage/signoff
 simulator. This boundary is documented rather than hidden.
 

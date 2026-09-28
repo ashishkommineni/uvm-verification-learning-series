@@ -12,9 +12,16 @@ Study chapters 09–14. For every factory or configuration feature, ask what is
 being changed, who owns the setting, and at what phase the decision becomes
 fixed. Compile the advanced examples with `make uvm-lint`.
 
-## Third pass — interview and debug practice
+## Third pass — advanced integration
 
-Answer the 60 questions aloud in 60–90 seconds each. Then deliberately break
+Study chapters 16–21: typed environment configuration, complete TLM families,
+sequence arbitration/responses, advanced phasing, services, reset/error
+injection, and regression closure. Use the topic coverage matrix as a checklist
+and relate every mechanism to its failure mode.
+
+## Fourth pass — interview and debug practice
+
+Answer the 80 questions aloud in 60–90 seconds each. Then deliberately break
 one connection, expected count, assertion, or configuration path and diagnose
 the first failure rather than the final cascade.
 

@@ -19,6 +19,10 @@ mkdir -p "$build_dir"
   rtl/mini_bus_memory.sv \
   tb/assertions/mini_bus_sva.sv \
   tb/pkg/mini_bus_uvm_pkg.sv \
+  examples/configuration/agent_config_example.sv \
+  examples/tlm/tlm_fifo_example.sv \
+  examples/sequence_control/response_example.sv \
+  examples/services/sync_services_example.sv \
   examples/callbacks/driver_callback_example.sv \
   examples/virtual_sequences/coordination_example.sv \
   examples/ral/mini_reg_model.sv \

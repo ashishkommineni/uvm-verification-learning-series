@@ -1,4 +1,4 @@
-# 60 UVM interview questions and practical answers
+# 80 UVM interview questions and practical answers
 
 These answers focus on ownership, data flow, timing, and failure modes rather
 than memorized definitions.
@@ -401,3 +401,151 @@ from sequence through sequencer, driver, pins, monitor, scoreboard, and coverage
 Explain SVA responsibility, factory/config examples, objection/end-of-test, one
 bug caught, and which simulator results were actually executed. That proves
 understanding beyond repository file count.
+
+## Advanced integration and signoff
+
+### 61. What are TLM port, export, and implementation endpoints?
+
+A port is the caller that requires an interface method, an implementation
+(`imp`) is the consumer that implements it, and an export forwards that
+implementation through hierarchy. The normal connection direction is
+port-to-export-to-imp or port-to-imp. A port declaration alone contains no
+consumer behavior.
+
+### 62. Blocking versus nonblocking TLM?
+
+Blocking put/get/peek/transport methods are tasks and may wait, providing
+synchronization or backpressure. `try_*` and `can_*` methods are functions that
+return immediately. Analysis `write()` is also a zero-time function and is a
+one-to-many broadcast, so a subscriber must not delay inside it.
+
+### 63. When do you use `uvm_tlm_analysis_fifo`?
+
+Use it between an analysis producer and a task-based consumer when arrivals must
+be queued and processed asynchronously. Its analysis export accepts zero-time
+`write()` calls and its get/peek interface lets the consumer wait. Monitor object
+ownership and unbounded growth still need an explicit policy.
+
+### 64. How do you implement two analysis inputs of the same item type?
+
+Declare named implementation classes with `uvm_analysis_imp_decl` suffixes,
+then implement methods such as `write_expected()` and `write_actual()`. Separate
+analysis FIFOs are another clear option, especially when comparison is timed or
+the two streams arrive independently.
+
+### 65. `lock()` versus `grab()` on a sequencer?
+
+Both reserve sequencer access across a group of items. `lock()` enters normal
+arbitration order; `grab()` requests ahead of ordinary queued requests. Neither
+preempts an item already granted. Keep the region short and never wait for work
+that itself needs the locked sequencer.
+
+### 66. Why call `set_id_info()` on a response?
+
+It copies sequence and transaction routing IDs from the request so the sequencer
+can return the response to the originating sequence. The sequence then calls
+`get_response()`. Protocol IDs used for DUT out-of-order matching remain a
+separate item field and responsibility.
+
+### 67. How do you build an out-of-order scoreboard?
+
+Store expected and actual items by a stable protocol key such as transaction ID,
+compare whenever both sides for a key are available, and preserve any ordering
+rule within that ID. Support repeated outstanding IDs when legal, detect
+duplicates, and report every unmatched entry during check phase.
+
+### 68. Why use a typed configuration object?
+
+It groups related agent policy such as VIF, active/passive mode, checks, coverage,
+and timeout into one factory-aware object. The receiving component performs one
+typed config-db lookup and validates the whole contract, avoiding many wildcard
+scalar keys and inconsistent partial settings.
+
+### 69. How is `uvm_config_db` lookup resolved?
+
+The requested SystemVerilog type, field name, component context, instance pattern,
+hierarchical precedence, and set order all participate. Parameterized VIF types
+must match exactly. The most reliable design has one configuration owner, narrow
+paths, early sets, fatal checks for required values, and config-db tracing during
+debug.
+
+### 70. What are runtime phase subphases and phase domains?
+
+Pre-reset through post-shutdown subphases provide a shared runtime schedule.
+A phase domain is an independent schedule that can be synchronized with others.
+They help when interfaces have genuinely separate reset/runtime timelines, but
+mixing run/main traffic or adding domains without a project-wide policy makes
+objection and shutdown behavior hard to reason about.
+
+### 71. Drain time versus `phase_ready_to_end()`?
+
+Drain time adds a fixed grace interval after objections drop. It is simple for a
+known bounded pipeline but can hide missing completion. `phase_ready_to_end()`
+lets a component postpone completion when it knows work remains, but must be
+guarded against repeated raising. An explicit outstanding/queue-empty handshake
+is usually the strongest correctness condition.
+
+### 72. What does a UVM phase jump do?
+
+It redirects the affected phase schedule/domain to a target phase, sometimes for
+reset recovery. It is not local to one component, and current processes may be
+interrupted, so components must tolerate cleanup and restart. Use it only under
+a documented environment-wide reset policy.
+
+### 73. `uvm_event` versus `uvm_barrier`?
+
+An event announces an occurrence and optionally carries data; it is not persistent
+state unless combined with a state variable. A barrier releases participants
+when a configured threshold arrives. Events can be missed under the wrong wait
+semantics, and barriers can deadlock if a participant is killed or never arrives.
+
+### 74. How should command-line arguments be handled?
+
+Use standard UVM switches for test, verbosity, factory, and supported config-db
+settings. Parse project plusargs through `uvm_cmdline_processor`, validate every
+conversion/range, reject invalid values, and print the resolved configuration
+once with simulator, test, and seed for reproducibility.
+
+### 75. What is the difference between `copy()` and `clone()`?
+
+`copy(rhs)` transfers fields into an object that already exists. `clone()`
+factory-creates a same-dynamic-type object and then copies into it, returning a
+`uvm_object` handle that is commonly cast. Neither guarantees a deep copy unless
+the field automation or `do_copy()` implements nested ownership correctly.
+
+### 76. What is the correct reset strategy in a UVM bench?
+
+Define how accepted requests, responses, DUT state, driver handshakes, monitor
+partial transactions, scoreboard predictions, and assertions behave. Drive idle,
+resolve any checked-out sequence item under an abort/retry policy, flush or retain
+model state at the same semantic boundary as the DUT, and verify reset outputs
+with dedicated properties.
+
+### 77. How does a negative test produce a trustworthy pass?
+
+Inject one documented illegal/error condition, require the exact expected
+response or report count, and keep all unrelated checkers clean. Broad report
+suppression is not a pass. The scenario should also prove recovery or continued
+operation when the specification requires it.
+
+### 78. What information makes a regression reproducible?
+
+Test name, random seed, source commit, simulator and version, full command,
+configuration/plusargs, log path, coverage database, timing, and error/fatal
+counts. Separate DUT/testbench failures from license, farm, filesystem, and tool
+launch infrastructure failures.
+
+### 79. How do you close a functional coverage hole?
+
+Check whether the bin is specified, legal, and reachable; whether constraints
+can generate it; whether the DUT accepts it; and whether the monitor samples the
+correct event. Add focused legal stimulus only after locating the gap. Exclude a
+bin only with a specification-based written justification.
+
+### 80. What is the difference between RAL `set`, `update`, `mirror`, and `reset`?
+
+`set` changes desired model state only. `update` writes fields whose desired and
+mirrored values differ. `mirror` reads actual hardware, updates the mirror, and
+optionally compares. `reset` resets model values only; it neither drives DUT reset
+nor accesses hardware. Confusing these operations is a common source of mirror
+drift and false expectations.
