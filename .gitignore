@@ -1,0 +1,10 @@
+build/
+results/
+xcelium.d/
+waves.shm/
+*.log
+*.key
+*.history
+*.vcd
+*.fsdb
+*.wlf
