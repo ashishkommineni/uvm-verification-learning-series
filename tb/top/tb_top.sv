@@ -25,7 +25,17 @@ module tb_top;
   mini_bus_sva #(
     .ADDR_WIDTH(MINI_ADDR_WIDTH),
     .DATA_WIDTH(MINI_DATA_WIDTH)
-  ) protocol_checks(bus);
+  ) protocol_checks (
+    .clk(bus.clk),
+    .reset_n(bus.reset_n),
+    .req(bus.req),
+    .write(bus.write),
+    .address(bus.address),
+    .write_data(bus.write_data),
+    .ready(bus.ready),
+    .response_valid(bus.response_valid),
+    .read_data(bus.read_data)
+  );
 
   initial begin
     bus.reset_n = 1'b0;

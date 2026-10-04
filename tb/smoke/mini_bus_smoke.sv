@@ -26,7 +26,17 @@ module mini_bus_smoke;
   mini_bus_sva #(
     .ADDR_WIDTH(ADDR_WIDTH),
     .DATA_WIDTH(DATA_WIDTH)
-  ) protocol_checks(bus);
+  ) protocol_checks (
+    .clk(bus.clk),
+    .reset_n(bus.reset_n),
+    .req(bus.req),
+    .write(bus.write),
+    .address(bus.address),
+    .write_data(bus.write_data),
+    .ready(bus.ready),
+    .response_valid(bus.response_valid),
+    .read_data(bus.read_data)
+  );
 
   task automatic transfer(
     input bit write_value,
